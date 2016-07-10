@@ -7,11 +7,10 @@ import {TabsPage} from './pages/tabs/tabs';
 @Component({
   template: '<ion-nav [root]="rootPage"></ion-nav>'
 })
-export class MyApp {
+export class MessengerApp {
+  static parameters = [[Platform]]
 
-  private rootPage:any;
-
-  constructor(private platform:Platform) {
+  constructor(platform) {
     this.rootPage = TabsPage;
 
     platform.ready().then(() => {
@@ -22,4 +21,4 @@ export class MyApp {
   }
 }
 
-ionicBootstrap(MyApp)
+ionicBootstrap(MessengerApp);
