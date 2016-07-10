@@ -27,11 +27,13 @@ gulp.task('run:before', [shouldWatch ? 'watch' : 'build']);
  * changes, but you are of course welcome (and encouraged) to customize your
  * build however you see fit.
  */
-var buildBrowserify = require('ionic-gulp-browserify-typescript');
 var buildSass = require('ionic-gulp-sass-build');
+var buildWebpack = require('ionic-gulp-webpack');
 var copyHTML = require('ionic-gulp-html-copy');
 var copyFonts = require('ionic-gulp-fonts-copy');
 var copyScripts = require('ionic-gulp-scripts-copy');
+
+var webpackConfig = require('./webpack.config');
 
 var isRelease = argv.indexOf('--release') > -1;
 
@@ -41,7 +43,11 @@ gulp.task('watch', ['clean'], function(done){
     function(){
       gulpWatch('app/**/*.scss', function(){ gulp.start('sass'); });
       gulpWatch('app/**/*.html', function(){ gulp.start('html'); });
-      buildBrowserify({ watch: true }).on('end', done);
+
+      buildWebpack({
+        config: webpackConfig,
+        watch: true
+      }).then(done);
     }
   );
 });
@@ -50,15 +56,9 @@ gulp.task('build', ['clean'], function(done){
   runSequence(
     ['sass', 'html', 'fonts', 'scripts'],
     function(){
-      buildBrowserify({
-        minify: isRelease,
-        browserifyOptions: {
-          debug: !isRelease
-        },
-        uglifyOptions: {
-          mangle: false
-        }
-      }).on('end', done);
+      buildWebpack({
+        config: webpackConfig
+      }).then(done);
     }
   );
 });
