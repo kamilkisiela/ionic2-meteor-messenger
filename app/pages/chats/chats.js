@@ -61,4 +61,9 @@ export class ChatsPage {
       }
     ];
   }
+
+  removeChat(chat) {
+    const index = this.chats.indexOf(chat);
+    this.chats.splice(index, 1);
+  }
 }
