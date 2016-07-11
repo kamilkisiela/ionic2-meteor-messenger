@@ -27,7 +27,10 @@ module.exports = {
     }]
   },
   resolve: {
-    extensions: ['', '.js']
+    extensions: ['', '.js'],
+    alias: {
+      api: __dirname + '/api/server'
+    }
   }
 };
 
