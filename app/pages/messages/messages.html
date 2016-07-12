@@ -23,3 +23,19 @@
     </div>
   </ion-scroll>
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar primary class="messages-page-footer" position="bottom">
+    <ion-input [(ngModel)]="message" (keypress)="onInputKeypress($event)" class="message-input" placeholder="Type a message"></ion-input>
+
+    <ion-buttons end>
+      <button *ngIf="message" class="message-input-button" (click)="sendMessage()">
+        <ion-icon name="send"></ion-icon>
+      </button>
+
+      <button *ngIf="!message" class="message-input-button">
+        <ion-icon name="mic"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>
