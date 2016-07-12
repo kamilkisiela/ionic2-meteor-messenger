@@ -3,6 +3,7 @@ import 'meteor-client-side';
 import {Component} from '@angular/core';
 import {Platform, ionicBootstrap} from 'ionic-angular';
 import {StatusBar} from 'ionic-native';
+import {METEOR_PROVIDERS} from 'angular2-meteor';
 import {TabsPage} from './pages/tabs/tabs';
 
 
@@ -23,4 +24,4 @@ export class MessengerApp {
   }
 }
 
-ionicBootstrap(MessengerApp);
+ionicBootstrap(MessengerApp, [METEOR_PROVIDERS]);
