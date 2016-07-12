@@ -1,69 +1,61 @@
 import Moment from 'moment';
 import {Component} from '@angular/core';
+import {MeteorComponent} from 'angular2-meteor';
 import {CalendarPipe} from 'angular2-moment';
+import {Chats, Messages} from 'api/collections';
 
 
 @Component({
   templateUrl: 'build/pages/chats/chats.html',
   pipes: [CalendarPipe]
 })
-export class ChatsPage {
+export class ChatsPage extends MeteorComponent {
   constructor() {
-    this.chats = this.findChats();
+    super();
+
+    this.autorun(() => {
+      this.chats = this.findChats();
+    }, true);
   }
 
   findChats() {
-    return [
-      {
-        _id: 0,
-        title: 'Ethan Gonzalez',
-        picture: 'https://randomuser.me/api/portraits/thumb/men/1.jpg',
-        lastMessage: {
-          content: 'You on your way?',
-          createdAt: Moment().subtract(1, 'hours').toDate()
-        }
-      },
-      {
-        _id: 1,
-        title: 'Bryan Wallace',
-        picture: 'https://randomuser.me/api/portraits/thumb/lego/1.jpg',
-        lastMessage: {
-          content: 'Hey, it\'s me',
-          createdAt: Moment().subtract(2, 'hours').toDate()
-        }
-      },
-      {
-        _id: 2,
-        title: 'Avery Stewart',
-        picture: 'https://randomuser.me/api/portraits/thumb/women/1.jpg',
-        lastMessage: {
-          content: 'I should buy a boat',
-          createdAt: Moment().subtract(1, 'days').toDate()
-        }
-      },
-      {
-        _id: 3,
-        title: 'Katie Peterson',
-        picture: 'https://randomuser.me/api/portraits/thumb/women/2.jpg',
-        lastMessage: {
-          content: 'Look at my mukluks!',
-          createdAt: Moment().subtract(4, 'days').toDate()
-        }
-      },
-      {
-        _id: 4,
-        title: 'Ray Edwards',
-        picture: 'https://randomuser.me/api/portraits/thumb/men/2.jpg',
-        lastMessage: {
-          content: 'This is wicked good ice cream.',
-          createdAt: Moment().subtract(2, 'weeks').toDate()
-        }
-      }
-    ];
+    const chats = Chats.find({}, {
+      transform: this::this.transformChat
+    });
+
+    chats.observe({
+      changed: (newChat, oldChat) => this.disposeChat(oldChat),
+      removed: (chat) => this.disposeChat(chat)
+    });
+
+    return chats;
+  }
+
+  disposeChat(chat) {
+    if (chat.lastMessageComp) {
+      chat.lastMessageComp.stop();
+    }
+  }
+
+  transformChat(chat) {
+    chat.lastMessage = {};
+
+    chat.lastMessageComp = this.autorun(() => {
+      chat.lastMessage = this.findLastMessage(chat);
+    }, true);
+
+    return chat;
+  }
+
+  findLastMessage(chat) {
+    return Messages.findOne({
+      chatId: chat._id
+    }, {
+      sort: {createdAt: -1}
+    });
   }
 
   removeChat(chat) {
-    const index = this.chats.indexOf(chat);
-    this.chats.splice(index, 1);
+    Chats.remove(chat._id);
   }
 }
