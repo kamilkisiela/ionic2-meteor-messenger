@@ -1,4 +1,5 @@
 import 'meteor-client-side';
+import 'api/methods';
 
 import {Component} from '@angular/core';
 import {Platform, ionicBootstrap} from 'ionic-angular';
