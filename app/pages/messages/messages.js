@@ -17,6 +17,7 @@ export class MessagesPage extends MeteorComponent {
 
     this.isEven = false;
     this.activeChat = navParams.get('chat');
+    this.message = '';
 
     this.title = this.activeChat.title;
     this.picture = this.activeChat.picture;
@@ -39,5 +40,16 @@ export class MessagesPage extends MeteorComponent {
     message.ownership = this.isEven ? 'mine' : 'other';
     this.isEven = !this.isEven;
     return message;
+  }
+
+  onInputKeypress({keyCode}) {
+    if (keyCode == 13) {
+      this.sendMessage();
+    }
+  }
+
+  sendMessage() {
+    this.call('addMessage', this.activeChat._id, this.message);
+    this.message = '';
   }
 }
