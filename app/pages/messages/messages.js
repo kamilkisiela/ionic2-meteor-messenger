@@ -27,6 +27,14 @@ export class MessagesPage extends MeteorComponent {
     }, true);
   }
 
+  ngOnInit() {
+    this.autoScroller = this.autoScroll();
+  }
+
+  ngOnDestroy() {
+    this.autoScroller.disconnect();
+  }
+
   findMessages() {
     return Messages.find({
       chatId: this.activeChat._id
@@ -51,5 +59,41 @@ export class MessagesPage extends MeteorComponent {
   sendMessage() {
     this.call('addMessage', this.activeChat._id, this.message);
     this.message = '';
+  }
+
+  autoScroll() {
+    const autoScroller = new MutationObserver(this::this.scrollDown);
+
+    autoScroller.observe(this.messagesList, {
+      childList: true,
+      subtree: true
+    });
+
+    return autoScroller;
+  }
+
+  scrollDown() {
+    this.scroller.scrollTop = this.scroller.scrollHeight;
+    this.messageInput.focus();
+  }
+
+  get messagesPageContent() {
+    return document.querySelector('.messages-page-content');
+  }
+
+  get messagesPageFooter() {
+    return document.querySelector('.messages-page-footer');
+  }
+
+  get messagesList() {
+    return this.messagesPageContent.querySelector('.messages');
+  }
+
+  get messageInput() {
+    return this.messagesPageFooter.querySelector('.message-input');
+  }
+
+  get scroller() {
+    return this.messagesList.querySelector('scroll-content');
   }
 }
