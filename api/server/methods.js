@@ -9,6 +9,20 @@ const nonEmptyString = Match.Where((str) => {
 });
 
 Meteor.methods({
+  updateProfile(profile) {
+    if (!this.userId) throw new Meteor.Error('unauthorized',
+      'User must be logged-in to create a new chat');
+
+    check(profile, {
+      name: nonEmptyString,
+      picture: nonEmptyString
+    });
+
+    Meteor.users.update(this.userId, {
+      $set: {profile}
+    });
+  },
+
   addMessage(chatId, content) {
     check(chatId, nonEmptyString);
     check(content, nonEmptyString);
