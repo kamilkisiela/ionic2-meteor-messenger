@@ -19,9 +19,11 @@ export class NewChatPage extends MeteorComponent {
 
     this.senderId = Meteor.userId();
 
-    this.autorun(() => {
-      this.users = this.findUsers();
-    }, true);
+    this.subscribe('users', () => {
+      this.autorun(() => {
+        this.users = this.findUsers();
+      }, true);
+    });
   }
 
   findUsers() {
