@@ -84,7 +84,7 @@ export class ChatsPage extends MeteorComponent {
   }
 
   removeChat(chat) {
-    Chats.remove(chat._id);
+    this.call('removeChat', chat._id);
   }
 
   showMessages(chat) {
