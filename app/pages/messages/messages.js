@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {NavParams} from 'ionic-angular';
 import {MeteorComponent} from 'angular2-meteor';
 import {DateFormatPipe} from 'angular2-moment';
+import {Meteor} from 'meteor/meteor';
 import {Messages} from 'api/collections';
 
 
@@ -15,8 +16,8 @@ export class MessagesPage extends MeteorComponent {
   constructor(navParams) {
     super();
 
-    this.isEven = false;
     this.activeChat = navParams.get('chat');
+    this.senderId = Meteor.userId();
     this.message = '';
 
     this.title = this.activeChat.title;
@@ -45,8 +46,8 @@ export class MessagesPage extends MeteorComponent {
   }
 
   transformMessage(message) {
-    message.ownership = this.isEven ? 'mine' : 'other';
-    this.isEven = !this.isEven;
+    if (!this.senderId) return message;
+    message.ownership = this.senderId == message.senderId ? 'mine' : 'other';
     return message;
   }
 
