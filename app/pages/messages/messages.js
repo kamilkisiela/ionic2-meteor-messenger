@@ -26,9 +26,11 @@ export class MessagesPage extends MeteorComponent {
     this.title = receiver.profile.name;
     this.picture = receiver.profile.picture;
 
-    this.autorun(() => {
-      this.messages = this.findMessages();
-    }, true);
+    this.subscribe('messages', this.activeChat._id, () => {
+      this.autorun(() => {
+        this.messages = this.findMessages();
+      }, true);
+    });
   }
 
   ngOnInit() {
