@@ -24,6 +24,9 @@ Meteor.methods({
   },
 
   addMessage(chatId, content) {
+    if (!this.userId) throw new Meteor.Error('unauthorized',
+      'User must be logged-in to create a new chat');
+
     check(chatId, nonEmptyString);
     check(content, nonEmptyString);
 
@@ -33,6 +36,7 @@ Meteor.methods({
       'Chat doesn\'t exist');
 
     Messages.insert({
+      senderId: this.userId,
       chatId: chatId,
       content: content,
       createdAt: new Date()
