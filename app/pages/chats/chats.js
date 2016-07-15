@@ -1,11 +1,12 @@
 import Moment from 'moment';
 import {Component} from '@angular/core';
-import {NavController} from 'ionic-angular';
+import {NavController, Popover} from 'ionic-angular';
 import {MeteorComponent} from 'angular2-meteor';
 import {CalendarPipe} from 'angular2-moment';
 import {Meteor} from 'meteor/meteor';
 import {Chats, Messages} from 'api/collections';
 import {MessagesPage} from '../messages/messages';
+import {ChatsOptionsPage} from '../chats-options/chats-options';
 
 
 @Component({
@@ -72,5 +73,13 @@ export class ChatsPage extends MeteorComponent {
 
   showMessages(chat) {
     this.navCtrl.push(MessagesPage, {chat});
+  }
+
+  showOptions() {
+    const popover = Popover.create(ChatsOptionsPage, {}, {
+      cssClass: 'options-popover'
+    });
+
+    this.navCtrl.present(popover);
   }
 }
