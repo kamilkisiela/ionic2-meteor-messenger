@@ -20,8 +20,11 @@ export class MessagesPage extends MeteorComponent {
     this.senderId = Meteor.userId();
     this.message = '';
 
-    this.title = this.activeChat.title;
-    this.picture = this.activeChat.picture;
+    const receiverId = this.activeChat.memberIds.find(memberId => memberId != this.senderId);
+    const receiver = Meteor.users.findOne(receiverId);
+
+    this.title = receiver.profile.name;
+    this.picture = receiver.profile.picture;
 
     this.autorun(() => {
       this.messages = this.findMessages();
