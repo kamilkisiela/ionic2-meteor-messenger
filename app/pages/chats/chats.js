@@ -3,6 +3,7 @@ import {Component} from '@angular/core';
 import {NavController} from 'ionic-angular';
 import {MeteorComponent} from 'angular2-meteor';
 import {CalendarPipe} from 'angular2-moment';
+import {Meteor} from 'meteor/meteor';
 import {Chats, Messages} from 'api/collections';
 import {MessagesPage} from '../messages/messages';
 
@@ -18,6 +19,8 @@ export class ChatsPage extends MeteorComponent {
     super();
 
     this.navCtrl = navCtrl;
+
+    this.senderId = Meteor.userId();
 
     this.autorun(() => {
       this.chats = this.findChats();
@@ -44,6 +47,8 @@ export class ChatsPage extends MeteorComponent {
   }
 
   transformChat(chat) {
+    if (!this.senderId) return chat;
+
     chat.lastMessage = {};
 
     chat.lastMessageComp = this.autorun(() => {
