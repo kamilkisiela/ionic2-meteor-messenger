@@ -43,15 +43,25 @@ export class ChatsPage extends MeteorComponent {
   }
 
   disposeChat(chat) {
-    if (chat.lastMessageComp) {
-      chat.lastMessageComp.stop();
-    }
+    if (chat.receiverComp) chat.receiverComp.stop();
+    if (chat.lastMessageComp) chat.lastMessageComp.stop();
   }
 
   transformChat(chat) {
     if (!this.senderId) return chat;
 
+    chat.title = '';
+    chat.picture = '';
     chat.lastMessage = {};
+
+    chat.receiverComp = this.autorun(() => {
+      const receiverId = chat.memberIds.find(memberId => memberId != this.senderId);
+      const receiver = Meteor.users.findOne(receiverId);
+      if (!receiver) return;
+
+      chat.title = receiver.profile.name;
+      chat.picture = receiver.profile.picture;
+    }, true);
 
     chat.lastMessageComp = this.autorun(() => {
       chat.lastMessage = this.findLastMessage(chat);
