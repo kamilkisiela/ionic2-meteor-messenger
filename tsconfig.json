@@ -5,17 +5,12 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true
   },
-  "filesGlob": [
-    "**/*.ts",
-    "!node_modules/**/*"
+  "files": [
+    "typings/index.d.ts",
+    "node_modules/zone.js/dist/zone.js.d.ts"
   ],
   "exclude": [
-    "node_modules",
-    "typings/global",
-    "typings/global.d.ts"
-  ],
-  "compileOnSave": false,
-  "atom": {
-    "rewriteTsconfig": false
-  }
+    "www",
+    "node_modules"
+  ]
 }
