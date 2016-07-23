@@ -1,10 +1,12 @@
 import * as Moment from 'moment';
 import {Component} from '@angular/core';
+import {CalendarPipe} from 'angular2-moment';
 import {Chat} from 'api/models';
 
 
 @Component({
-  templateUrl: 'build/pages/chats/chats.html'
+  templateUrl: 'build/pages/chats/chats.html',
+  pipes: [CalendarPipe]
 })
 export class ChatsPage {
   chats: Chat[];
