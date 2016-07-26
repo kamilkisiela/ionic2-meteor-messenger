@@ -37,8 +37,19 @@ if (isRelease) {
 }
 
 function resolveExternals(context, request, callback) {
-  return cordovaPlugin(request, callback) ||
+  return meteorPack(request, callback) ||
+         cordovaPlugin(request, callback) ||
          callback();
+}
+
+function meteorPack(request, callback) {
+  var match = request.match(/^meteor\/(.+)$/);
+  var pack = match && match[1];
+
+  if (pack) {
+    callback(null, 'window.Package && Package["' + pack + '"]');
+    return true;
+  }
 }
 
 function cordovaPlugin(request, callback) {
