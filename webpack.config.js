@@ -15,7 +15,10 @@ var config = module.exports = {
     resolveExternals
   ],
   resolve: {
-    extensions: ['', '.webpack.js', '.web.js', '.ts', '.js']
+    extensions: ['', '.webpack.js', '.web.js', '.ts', '.js'],
+    alias: {
+      api: __dirname + '/api/server'
+    }
   },
   module: {
     loaders: [
