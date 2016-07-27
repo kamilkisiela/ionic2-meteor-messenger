@@ -4,6 +4,7 @@ declare module 'api/models' {
     title?: string;
     picture?: string;
     lastMessage?: Message;
+    lastMessageComp?: Tracker.Computation;
   }
 
   interface Message {
