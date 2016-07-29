@@ -12,6 +12,7 @@ import {Messages} from 'api/collections';
   pipes: [DateFormatPipe]
 })
 export class MessagesPage extends MeteorComponent {
+  message = '';
   title: string;
   picture: string;
   messages: Mongo.Cursor<Message>;
@@ -29,6 +30,17 @@ export class MessagesPage extends MeteorComponent {
     this.autorun(() => {
       this.messages = this.findMessages();
     }, true);
+  }
+
+  onInputKeypress({keyCode}: KeyboardEvent): void {
+    if (keyCode == 13) {
+      this.sendMessage();
+    }
+  }
+
+  sendMessage(): void {
+    this.call('addMessage', this.activeChat._id, this.message);
+    this.message = '';
   }
 
   private findMessages(): Mongo.Cursor<Message> {
