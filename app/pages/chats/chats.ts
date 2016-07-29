@@ -1,9 +1,11 @@
 import {Component} from '@angular/core';
+import {NavController} from 'ionic-angular';
 import {MeteorComponent} from 'angular2-meteor';
 import {CalendarPipe} from 'angular2-moment';
 import {Mongo} from 'meteor/mongo';
 import {Chat, Message} from 'api/models';
 import {Chats, Messages} from 'api/collections';
+import {MessagesPage} from '../messages/messages';
 
 
 @Component({
@@ -13,7 +15,7 @@ import {Chats, Messages} from 'api/collections';
 export class ChatsPage extends MeteorComponent {
   chats: Mongo.Cursor<Chat>;
 
-  constructor() {
+  constructor(private navCtrl: NavController) {
     super();
 
     this.autorun(() => {
@@ -23,6 +25,10 @@ export class ChatsPage extends MeteorComponent {
 
   removeChat(chat): void {
     Chats.remove(chat._id);
+  }
+
+  showMessages(chat): void {
+    this.navCtrl.push(MessagesPage, {chat});
   }
 
   private findChats(): Mongo.Cursor<Chat>{
