@@ -1,13 +1,15 @@
 import {Component} from '@angular/core';
 import {NavParams} from 'ionic-angular';
 import {MeteorComponent} from 'angular2-meteor';
+import {DateFormatPipe} from 'angular2-moment';
 import {Mongo} from 'meteor/mongo';
 import {Chat, Message} from 'api/models';
 import {Messages} from 'api/collections';
 
 
 @Component({
-  templateUrl: 'build/pages/messages/messages.html'
+  templateUrl: 'build/pages/messages/messages.html',
+  pipes: [DateFormatPipe]
 })
 export class MessagesPage extends MeteorComponent {
   title: string;
