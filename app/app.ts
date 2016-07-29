@@ -1,4 +1,6 @@
 import 'meteor-client-side';
+import 'accounts-base-client-side';
+import 'accounts-phone';
 import 'api/methods';
 
 import {Component} from '@angular/core';
