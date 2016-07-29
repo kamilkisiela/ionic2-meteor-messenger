@@ -2,6 +2,7 @@ import {Component, OnInit, OnDestroy} from '@angular/core';
 import {NavParams} from 'ionic-angular';
 import {MeteorComponent} from 'angular2-meteor';
 import {DateFormatPipe} from 'angular2-moment';
+import {Meteor} from 'meteor/meteor';
 import {Mongo} from 'meteor/mongo';
 import {Chat, Message} from 'api/models';
 import {Messages} from 'api/collections';
@@ -16,7 +17,7 @@ export class MessagesPage extends MeteorComponent implements OnInit, OnDestroy {
   title: string;
   picture: string;
   messages: Mongo.Cursor<Message>;
-  private isEven = false;
+  private senderId: string;
   private activeChat: Chat;
   private autoScroller: MutationObserver;
 
@@ -24,6 +25,7 @@ export class MessagesPage extends MeteorComponent implements OnInit, OnDestroy {
     super();
 
     this.activeChat = <Chat>navParams.get('chat');
+    this.senderId = Meteor.userId();
 
     this.title = this.activeChat.title;
     this.picture = this.activeChat.picture;
@@ -62,8 +64,7 @@ export class MessagesPage extends MeteorComponent implements OnInit, OnDestroy {
   }
 
   private transformMessage(message): Message {
-    message.ownership = this.isEven ? 'mine' : 'other';
-    this.isEven = !this.isEven;
+    message.ownership = this.senderId == message.senderId ? 'mine' : 'other';
     return message;
   }
 
