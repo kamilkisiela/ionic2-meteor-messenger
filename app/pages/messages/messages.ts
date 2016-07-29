@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit, OnDestroy} from '@angular/core';
 import {NavParams} from 'ionic-angular';
 import {MeteorComponent} from 'angular2-meteor';
 import {DateFormatPipe} from 'angular2-moment';
@@ -11,13 +11,14 @@ import {Messages} from 'api/collections';
   templateUrl: 'build/pages/messages/messages.html',
   pipes: [DateFormatPipe]
 })
-export class MessagesPage extends MeteorComponent {
+export class MessagesPage extends MeteorComponent implements OnInit, OnDestroy {
   message = '';
   title: string;
   picture: string;
   messages: Mongo.Cursor<Message>;
   private isEven = false;
   private activeChat: Chat;
+  private autoScroller: MutationObserver;
 
   constructor(navParams: NavParams) {
     super();
@@ -30,6 +31,14 @@ export class MessagesPage extends MeteorComponent {
     this.autorun(() => {
       this.messages = this.findMessages();
     }, true);
+  }
+
+  ngOnInit(): void {
+    this.autoScroller = this.autoScroll();
+  }
+
+  ngOnDestroy(): void {
+    this.autoScroller.disconnect();
   }
 
   onInputKeypress({keyCode}: KeyboardEvent): void {
@@ -56,5 +65,41 @@ export class MessagesPage extends MeteorComponent {
     message.ownership = this.isEven ? 'mine' : 'other';
     this.isEven = !this.isEven;
     return message;
+  }
+
+  private autoScroll(): MutationObserver {
+    const autoScroller = new MutationObserver(this.scrollDown.bind(this));
+
+    autoScroller.observe(this.messagesList, {
+      childList: true,
+      subtree: true
+    });
+
+    return autoScroller;
+  }
+
+  private scrollDown(): void {
+    this.scroller.scrollTop = this.scroller.scrollHeight;
+    this.messageEditor.focus();
+  }
+
+  private get messagesPageContent(): Element {
+    return document.querySelector('.messages-page-content');
+  }
+
+  private get messagesPageFooter(): Element {
+    return document.querySelector('.messages-page-footer');
+  }
+
+  private get messagesList(): Element {
+    return this.messagesPageContent.querySelector('.messages');
+  }
+
+  private get messageEditor(): HTMLInputElement {
+    return <HTMLInputElement>this.messagesPageFooter.querySelector('.message-editor');
+  }
+
+  private get scroller(): Element {
+    return this.messagesList.querySelector('scroll-content');
   }
 }
