@@ -15,6 +15,7 @@ declare module 'api/models' {
   interface Message {
     _id?: string;
     chatId?: string;
+    senderId?: string;
     ownership?: string;
     content?: string;
     createdAt?: Date;
