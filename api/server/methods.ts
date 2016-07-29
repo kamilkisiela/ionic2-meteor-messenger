@@ -1,5 +1,6 @@
 import {Meteor} from 'meteor/meteor';
 import {check, Match} from 'meteor/check';
+import {Profile} from 'api/models';
 import {Chats, Messages} from './collections';
 
 const nonEmptyString = Match.Where((str) => {
@@ -9,6 +10,20 @@ const nonEmptyString = Match.Where((str) => {
 
 
 Meteor.methods({
+  updateProfile(profile: Profile): void {
+    if (!this.userId) throw new Meteor.Error('unauthorized',
+      'User must be logged-in to create a new chat');
+
+    check(profile, {
+      name: nonEmptyString,
+      picture: nonEmptyString
+    });
+
+    Meteor.users.update(this.userId, {
+      $set: {profile}
+    });
+  },
+
   addMessage(chatId: string, content: string): void {
     check(chatId, nonEmptyString);
     check(content, nonEmptyString);
