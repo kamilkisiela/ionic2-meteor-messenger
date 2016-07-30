@@ -27,8 +27,11 @@ export class MessagesPage extends MeteorComponent implements OnInit, OnDestroy {
     this.activeChat = <Chat>navParams.get('chat');
     this.senderId = Meteor.userId();
 
-    this.title = this.activeChat.title;
-    this.picture = this.activeChat.picture;
+    const receiverId = this.activeChat.memberIds.find(memberId => memberId != this.senderId);
+    const receiver = Meteor.users.findOne(receiverId);
+
+    this.title = receiver.profile.name;
+    this.picture = receiver.profile.picture;
 
     this.autorun(() => {
       this.messages = this.findMessages();
