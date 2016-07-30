@@ -24,8 +24,10 @@ export class ChatsPage extends MeteorComponent {
 
     this.senderId = Meteor.userId();
 
-    this.autorun(() => {
-      this.chats = this.findChats();
+    this.subscribe('chats', () => {
+      this.autorun(() => {
+        this.chats = this.findChats();
+      });
     });
   }
 
