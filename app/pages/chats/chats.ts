@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {NavController, Popover} from 'ionic-angular';
+import {NavController, Modal, Popover} from 'ionic-angular';
 import {MeteorComponent} from 'angular2-meteor';
 import {CalendarPipe} from 'angular2-moment';
 import {Mongo} from 'meteor/mongo';
@@ -7,6 +7,7 @@ import {Chat, Message} from 'api/models';
 import {Chats, Messages} from 'api/collections';
 import {MessagesPage} from '../messages/messages';
 import {ChatsOptionsPage} from '../chats-options/chats-options';
+import {NewChatPage} from '../new-chat/new-chat';
 
 
 @Component({
@@ -22,6 +23,11 @@ export class ChatsPage extends MeteorComponent {
     this.autorun(() => {
       this.chats = this.findChats();
     });
+  }
+
+  addChat(): void {
+    const modal = Modal.create(NewChatPage);
+    this.navCtrl.present(modal);
   }
 
   removeChat(chat): void {
