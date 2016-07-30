@@ -6,6 +6,7 @@ declare module 'api/models' {
 
   interface Chat {
     _id?: string;
+    memberIds?: string[];
     title?: string;
     picture?: string;
     lastMessage?: Message;
