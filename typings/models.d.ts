@@ -10,6 +10,7 @@ declare module 'api/models' {
     title?: string;
     picture?: string;
     lastMessage?: Message;
+    receiverComp?: Tracker.Computation;
     lastMessageComp?: Tracker.Computation;
   }
 
