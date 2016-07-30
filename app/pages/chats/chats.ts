@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {NavController, Modal, Popover} from 'ionic-angular';
 import {MeteorComponent} from 'angular2-meteor';
 import {CalendarPipe} from 'angular2-moment';
+import {Meteor} from 'meteor/meteor';
 import {Mongo} from 'meteor/mongo';
 import {Chat, Message} from 'api/models';
 import {Chats, Messages} from 'api/collections';
@@ -16,9 +17,12 @@ import {NewChatPage} from '../new-chat/new-chat';
 })
 export class ChatsPage extends MeteorComponent {
   chats: Mongo.Cursor<Chat>;
+  private senderId: string;
 
   constructor(private navCtrl: NavController) {
     super();
+
+    this.senderId = Meteor.userId();
 
     this.autorun(() => {
       this.chats = this.findChats();
@@ -60,6 +64,15 @@ export class ChatsPage extends MeteorComponent {
   }
 
   private transformChat(chat): Chat {
+    chat.receiverComp = this.autorun(() => {
+      const receiverId = chat.memberIds.find(memberId => memberId != this.senderId);
+      const receiver = Meteor.users.findOne(receiverId);
+      if (!receiver) return;
+
+      chat.title = receiver.profile.name;
+      chat.picture = receiver.profile.picture;
+    });
+
     chat.lastMessageComp = this.autorun(() => {
       chat.lastMessage = this.findLastMessage(chat);
     });
@@ -75,9 +88,8 @@ export class ChatsPage extends MeteorComponent {
     });
   }
 
-  private disposeChat(chat): void {
-    if (chat.lastMessageComp) {
-      chat.lastMessageComp.stop();
-    }
+  private disposeChat(chat: Chat): void {
+    if (chat.receiverComp) chat.receiverComp.stop();
+    if (chat.lastMessageComp) chat.lastMessageComp.stop();
   }
 }
