@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {NavController, Alert} from 'ionic-angular';
+import {NavController, AlertController} from 'ionic-angular';
 import {MeteorComponent} from 'angular2-meteor';
 import {Meteor} from 'meteor/meteor';
 import {Profile} from 'api/models';
@@ -12,7 +12,7 @@ import {TabsPage} from '../tabs/tabs';
 export class ProfilePage extends MeteorComponent {
   profile: Profile;
 
-  constructor(private navCtrl: NavController) {
+  constructor(private navCtrl: NavController, private alertCtrl: AlertController) {
     super();
 
     this.profile = Meteor.user().profile || {
@@ -31,12 +31,12 @@ export class ProfilePage extends MeteorComponent {
   private handleError(e: Error): void {
     console.error(e);
 
-    const alert = Alert.create({
+    const alert = this.alertCtrl.create({
       title: 'Oops!',
       message: e.message,
       buttons: ['OK']
     });
 
-    this.navCtrl.present(alert);
+    alert.present();
   }
 }

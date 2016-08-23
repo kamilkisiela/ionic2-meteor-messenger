@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {NavController, Modal, Popover} from 'ionic-angular';
+import {NavController, ModalController, PopoverController} from 'ionic-angular';
 import {MeteorComponent} from 'angular2-meteor';
 import {CalendarPipe} from 'angular2-moment';
 import {Meteor} from 'meteor/meteor';
@@ -19,7 +19,9 @@ export class ChatsPage extends MeteorComponent {
   chats: Mongo.Cursor<Chat>;
   private senderId: string;
 
-  constructor(private navCtrl: NavController) {
+  constructor(private navCtrl: NavController,
+              private modalCtrl: ModalController,
+              private popoverCtrl: PopoverController) {
     super();
 
     this.senderId = Meteor.userId();
@@ -32,8 +34,8 @@ export class ChatsPage extends MeteorComponent {
   }
 
   addChat(): void {
-    const modal = Modal.create(NewChatPage);
-    this.navCtrl.present(modal);
+    const modal = this.modalCtrl.create(NewChatPage);
+    modal.present();
   }
 
   removeChat(chat): void {
@@ -45,11 +47,11 @@ export class ChatsPage extends MeteorComponent {
   }
 
   showOptions(): void {
-    const popover = Popover.create(ChatsOptionsPage, {}, {
+    const popover = this.popoverCtrl.create(ChatsOptionsPage, {}, {
       cssClass: 'options-popover'
     });
 
-    this.navCtrl.present(popover);
+    popover.present();
   }
 
   private findChats(): Mongo.Cursor<Chat>{

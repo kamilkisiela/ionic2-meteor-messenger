@@ -1,5 +1,5 @@
 import {Component, NgZone} from '@angular/core';
-import {NavController, NavParams, Alert} from 'ionic-angular';
+import {App, AlertController, NavParams} from 'ionic-angular';
 import {MeteorComponent} from 'angular2-meteor';
 import {Accounts} from 'meteor/accounts-base';
 import {ProfilePage} from '../profile/profile';
@@ -12,7 +12,10 @@ export class VerificationPage extends MeteorComponent {
   code = '';
   phone: string;
 
-  constructor(private navCtrl: NavController, private zone: NgZone, navParams: NavParams) {
+  constructor(private app: App,
+              private alertCtrl: AlertController,
+              private zone: NgZone,
+              navParams: NavParams) {
     super();
 
     this.phone = <string>navParams.get('phone');
@@ -29,7 +32,7 @@ export class VerificationPage extends MeteorComponent {
       this.zone.run(() => {
         if (e) return this.handleError(e);
 
-        this.navCtrl.setRoot(ProfilePage, {}, {
+        this.app.getRootNav().setRoot(ProfilePage, {}, {
           animate: true
         });
       });
@@ -39,12 +42,12 @@ export class VerificationPage extends MeteorComponent {
   private handleError(e: Error): void {
     console.error(e);
 
-    const alert = Alert.create({
+    const alert = this.alertCtrl.create({
       title: 'Oops!',
       message: e.message,
       buttons: ['OK']
     });
 
-    this.navCtrl.present(alert);
+    alert.present();
   }
 }

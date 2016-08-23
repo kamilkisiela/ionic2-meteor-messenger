@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {NavController, ViewController, Alert} from 'ionic-angular';
+import {App, NavController, ViewController, AlertController} from 'ionic-angular';
 import {Meteor} from 'meteor/meteor';
 import {ProfilePage} from '../profile/profile';
 import {LoginPage} from '../login/login';
@@ -9,7 +9,10 @@ import {LoginPage} from '../login/login';
   templateUrl: 'build/pages/chats-options/chats-options.html'
 })
 export class ChatsOptionsPage {
-  constructor(private navCtrl: NavController, private viewCtrl: ViewController) {}
+  constructor(private app: App,
+              private navCtrl: NavController,
+              private viewCtrl: ViewController,
+              private alertCtrl: AlertController) {}
 
   editProfile(): void {
     this.viewCtrl.dismiss().then(() => {
@@ -18,7 +21,7 @@ export class ChatsOptionsPage {
   }
 
   logout(): void {
-    const alert = Alert.create({
+    const alert = this.alertCtrl.create({
       title: 'Logout',
       message: 'Are you sure you would like to proceed?',
       buttons: [
@@ -37,7 +40,7 @@ export class ChatsOptionsPage {
     });
 
     this.viewCtrl.dismiss().then(() => {
-      this.navCtrl.present(alert);
+      alert.present();
     });
   }
 
@@ -46,7 +49,7 @@ export class ChatsOptionsPage {
       alert.dismiss().then(() => {
         if (e) return this.handleError(e);
 
-        this.navCtrl.rootNav.setRoot(LoginPage, {}, {
+        this.app.getRootNav().setRoot(LoginPage, {}, {
           animate: true
         });
       });
@@ -56,12 +59,12 @@ export class ChatsOptionsPage {
   private handleError(e: Error): void {
     console.error(e);
 
-    const alert = Alert.create({
+    const alert = this.alertCtrl.create({
       title: 'Oops!',
       message: e.message,
       buttons: ['OK']
     });
 
-    this.navCtrl.present(alert);
+    alert.present();
   }
 }

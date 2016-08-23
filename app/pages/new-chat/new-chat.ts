@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {MeteorComponent} from 'angular2-meteor';
-import {NavController, ViewController, Alert} from 'ionic-angular';
+import {ViewController, AlertController} from 'ionic-angular';
 import {Meteor} from 'meteor/meteor';
 import {Mongo} from 'meteor/mongo';
 import {Chats} from 'api/collections';
@@ -13,7 +13,7 @@ export class NewChatPage extends MeteorComponent {
   users: Mongo.Cursor<Meteor.User>;
   private senderId: string;
 
-  constructor(private navCtrl: NavController, private viewCtrl: ViewController) {
+  constructor(private viewCtrl: ViewController, private alertCtrl: AlertController) {
     super();
 
     this.senderId = Meteor.userId();
@@ -55,12 +55,12 @@ export class NewChatPage extends MeteorComponent {
   private handleError(e: Error): void {
     console.error(e);
 
-    const alert = Alert.create({
+    const alert = this.alertCtrl.create({
       title: 'Oops!',
       message: e.message,
       buttons: ['OK']
     });
 
-    this.navCtrl.present(alert);
+    alert.present();
   }
 }

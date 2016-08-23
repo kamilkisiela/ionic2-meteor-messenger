@@ -5,7 +5,7 @@ var webpack = require('webpack');
 var isRelease = process.argv.indexOf('--release') > -1;
 
 var config = module.exports = {
-  entry: './app/app.ts',
+  entry: './app/main.ts',
   output: {
     path: __dirname + '/www/build/js',
     filename: 'app.bundle.js'
